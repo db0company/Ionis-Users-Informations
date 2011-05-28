@@ -1,0 +1,45 @@
+
+=================== [ Ionis Users Informations PHP Class ] ===================
+
+A PHP Class to get informations about students in Ionis group :
+Isbp, Epitech, Etna, Ipsa, Epita, e-art, Web@cademie, ...
+
+
+============================== [ Requirement ] ===============================
+
+- PHP >= 5.3
+- libssh2-php
+
+================================= [ Usage ] ==================================
+
+1) Initialisation
+
+   $ionis = new IonisInfo($login, $pass);
+   where $login is your ionis (exampl_e) and $pass is your unix password.
+
+
+2) Functions
+
+- Get a login from the uid :
+    $ionis->getLogin($uid)
+
+- Get uid, name, group, school, promo from the login :
+    $ionis->getUid($login);
+    $ionis->getName($login);
+    $ionis->getGroup($login);
+    $ionis->getSchool($login);
+    $ionis->getPromo($login);
+
+- Check the PPP password :
+    $ionis->checkPass($login, $pass);
+    return true if the password match for the login, false otherwise.
+
+- Update informations files
+    $ionis->updateFiles();
+    update the informations files. Good idea to put it in a crontab.
+
+
+3) Example
+
+   See the example.php file.
+
