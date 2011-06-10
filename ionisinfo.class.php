@@ -7,10 +7,13 @@
 
 class			IonisInfo
 {
-  var $pass_file	= 'pass.txt';
-  var $info_file	= 'info.txt';
+  var $pass_file	= '.ionis_pass';
+  var $info_file	= '.ionis_info';
   var $pass_dfile	= '/usr/site/etc/ppp.blowfish';
   var $info_dfile	= '/usr/site/etc/passwd';
+
+  var $path_plan	= '/u/all/';
+
   var $login;
   var $pass;
   var $student;
@@ -19,40 +22,64 @@ class			IonisInfo
   {
     $this->login = $login;
     $this->pass = $pass;
-    if (!(file_exists($this->pass_file)) || !(file_exists($this->info_file)))
-      $this->updateFiles();
+    if ((!(file_exists($this->pass_file)) || !(file_exists($this->info_file)))
+	&& !($this->updateFiles()))
+	return ;
     $this->initStudents();
   }
 
   public function	__destruct()
   {}
 
-  public function	updateFiles()
+  private function	sshConnect()
   {
     if ($this->login == '' || $this->pass == '')
-      die("Login and password not set");
-    $connection = ssh2_connect('ssh.epitech.eu', 22)
-      or die('SSH connexion failed.');
-    ssh2_auth_password($connection, $this->login, $this->pass)
-      or die('Authentification failed.');
-    ssh2_scp_recv($connection, $this->pass_dfile, $this->pass_file)
-      or die('Copy failed (file not found or local permission denied).');
-    ssh2_scp_recv($connection, $this->info_dfile, $this->info_file)
-      or die('Copy failed (file not found or local permission denied).');
+      {
+	echo "Login and password not set";
+	return (false);
+      }
+    if (!($connection = ssh2_connect('ssh.epitech.eu', 22)))
+    {
+      echo 'SSH connection failed.';
+      return (false);
+    }
+    if (!(ssh2_auth_password($connection, $this->login, $this->pass)))
+      {
+	echo 'Authentification failed.';
+	return (false);
+      }
+    return ($connection);
+  }
+
+  public function	updateFiles()
+  {
+    if (!($connection = $this->sshConnect()))
+      return (false);
+    if (!(ssh2_scp_recv($connection, $this->pass_dfile, $this->pass_file)))
+      {
+	echo 'Copy failed (file not found or local permission denied).';
+	return (false);
+      }
+    if (!(ssh2_scp_recv($connection, $this->info_dfile, $this->info_file)))
+      {
+	echo 'Copy failed (file not found or local permission denied).';
+	return (false);
+      }
+    return (true);
   }
 
   private function	initStudents()
   {
-    $filestream = fopen($this->pass_file, "r")
-      or die('Cannot open file.');
+    if (!($filestream = fopen($this->pass_file, "r")))
+      return (false);
     while (!feof($filestream))
       {
     	$tmp = @split(" ", fgets($filestream));
     	$this->student[$tmp[0]]['password'] = chop($tmp[1]);
       }
     fclose($filestream);
-    $filestream = fopen($this->info_file, "r")
-      or die('Cannot open file.');
+    if (!($filestream = fopen($this->info_file, "r")))
+      return (false);
     $this->promos = array();
     while (!feof($filestream))
       {
@@ -68,6 +95,7 @@ class			IonisInfo
 	$this->student[$info[0]]['promo'] = $info_promo[1];
       }
     fclose($filestream);
+    return (true);
   }
 
   public function	checkPass($login, $pass)
@@ -111,6 +139,45 @@ class			IonisInfo
       }
     return ('');
   }
+
+  public function	getReportUrl($login)
+  {
+    return ('http://www.epitech.eu/intra/index.php?section=etudiant&page=rapport&login='.$login);
+  }
+
+  public function	getPhotoUrl($login)
+  {
+    if (@fopen('http://www.epitech.eu/intra/photos/'.$login.'.jpg', 'r'))
+      return ('http://www.epitech.eu/intra/photos/'.$login.'.jpg');
+    return ('');
+  }
+
+  public function	copyPhoto($login, $directory = '.')
+  {
+    if (file_exists($directory.'/'.$login.'.jpg'))
+    return ($directory.'/'.$login.'.jpg');
+    if (!(@copy('http://www.epitech.eu/intra/photos/'.$login.'.jpg', $directory.'/'.$login.'.jpg')))
+      return ('');
+    return ($directory.'/'.$login.'.jpg');
+  }
+
+  public function	getPlan($login, $directory = '.')
+  {
+    if (!file_exists($directory.'/'.$login))
+      {
+	if (!($connection = $this->sshConnect()))
+	  return ('');
+	if (!(@ssh2_scp_recv($connection, '/u/all/'.$login.'/public/.plan', $directory.'/'.$login)))
+	  return ('');
+      }
+    $filehand = @file($directory.'/'.$login);
+    $total = count($filehand);
+    $plan = '';
+    for($i = 0; $i < $total; $i++)
+      $plan .= $filehand[$i];
+    return ($plan);
+  }
+
 
 }
 

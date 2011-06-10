@@ -30,6 +30,19 @@ Isbp, Epitech, Etna, Ipsa, Epita, e-art, Web@cademie, ...
     $ionis->getSchool($login);
     $ionis->getPromo($login);
 
+- Get Report Url :
+    $ionis->getReportUrl($login);
+
+- Get photos :
+    $ionis->getPhotoUrl($login);
+    get the url from the intra.
+    $ionis->copyPhoto($login, $directory);
+    copy the photo locally.
+
+- Get .plan file :
+    $ionis->getPlan($plan);
+    copy the .plan public file (afs) locally and return its content.
+
 - Check the PPP password :
     $ionis->checkPass($login, $pass);
     return true if the password match for the login, false otherwise.

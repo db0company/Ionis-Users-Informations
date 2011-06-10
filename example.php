@@ -28,7 +28,14 @@ if (isset($_POST['login']) && isset($_POST['pass'])
       <li>Group : '.$infotech->getGroup($login).'</li>
       <li>School : '.ucwords($infotech->getSchool($login)).'</li>
       <li>Promo : '.$infotech->getPromo($login).'</li>
-    </ul>';
+      <li><a href="'.$infotech->getReportUrl($login).
+      '">Intranet report</a></li>';
+    if (($photo = $infotech->copyPhoto($login, 'photos')) != ''
+	|| (($photo = $infotech->getPhotoUrl($login))) != '')
+      echo '<li>Photo : <img src="'.$photo.'" /></li>';
+    if (($plan = $infotech->getPlan($login, 'plan')) != '')
+      echo '<li>.Plan : <pre>'.$plan.'</pre></li>';
+    echo '    </ul>';
   }
  else
    {
