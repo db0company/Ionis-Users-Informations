@@ -1,5 +1,8 @@
 
+==============================================================================
+==============================================================================
 =================== [ Ionis Users Informations PHP Class ] ===================
+==============================================================================
 
 A PHP Class to get informations about students in Ionis group :
 Isbp, Epitech, Etna, Ipsa, Epita, e-art, Web@cademie, ...
@@ -56,3 +59,76 @@ Isbp, Epitech, Etna, Ipsa, Epita, e-art, Web@cademie, ...
 
    See the example.php file.
 
+
+==============================================================================
+==============================================================================
+============================= [ MySQL Version ] ==============================
+==============================================================================
+
+This version keep informations in a MySQL database. It's faster.
+
+============================== [ Requirement ] ===============================
+
+MySQL
+
+CREATE TABLE `your_database`.`ionisusersinformations`
+  (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+    `login` VARCHAR( 128 ) NOT NULL ,
+    `uid` INT NOT NULL ,
+    `promo` INT NOT NULL ,
+    `pass` VARCHAR( 255 ) NOT NULL ,
+    `school` VARCHAR( 255 ) NOT NULL ,
+    `groupe` VARCHAR( 255 ) NOT NULL ,
+    `name` VARCHAR( 255 ) NOT NULL ,
+    UNIQUE
+      (
+        `login`
+      )
+  );
+
+================================= [ Usage ] ==================================
+
+1) Initialisation
+
+   new IonisInfoSQL($mysql_login, $mysql_pass, $database_name, $ionis_login, $ionis_unix_pass);
+
+2) Other informations
+
+   See above.
+
+
+==============================================================================
+==============================================================================
+========================== [ Copyright/License ] =============================
+==============================================================================
+
+           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+                   Version 2, December 2004
+ 
+Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+ 
+Everyone is permitted to copy and distribute verbatim or modified
+copies of this license document, and changing it is allowed as long
+as the name is changed.
+ 
+           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+ 
+ 0. You just DO WHAT THE FUCK YOU WANT TO.
+
+================================= [ Author ] =================================
+
+ Made by	db0
+ Contact	db0company@gmail.com
+ Website	http://db0.fr/
+
+================================= [ Versions ] ===============================
+
+ Changes :
+ 1.0 : password, name, promo, group, school, uid
+ 1.1 : photo, report, .plan
+ 1.2 (current) : MySQL version
+
+ /!\ Latest version is on GitHub :
+     https://github.com/db0company/Ionis-Users-Informations
