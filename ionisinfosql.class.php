@@ -126,8 +126,8 @@ class			IonisInfoSQL
   {
     $user = $this->getUserByLogin($login);
     return ((strcmp(crypt(stripslashes($pass),
-			  $user['password']),
-		    $user['password'])) == 0);
+			  $user['pass']),
+		    $user['pass'])) == 0);
   }
 
   public function	getName($login)
