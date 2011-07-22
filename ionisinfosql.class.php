@@ -68,11 +68,13 @@ class			IonisInfoSQL
   {
     if (!($filestream = fopen($this->pass_file, "r")))
       return (false);
+    $i = 0;
     while (!feof($filestream))
       {
     	$tmp = @split(" ", fgets($filestream));
     	$req = $this->bdd->prepare('INSERT INTO ionisusersinformations(login, pass) VALUES(?, ?) ON DUPLICATE KEY UPDATE pass=?');
     	$req->execute(array($tmp[0], chop($tmp[1]), chop($tmp[1])));
+	++$i;
       }
     fclose($filestream);
     if (!($filestream = fopen($this->info_file, "r")))
@@ -94,7 +96,7 @@ class			IonisInfoSQL
 			    $info[0]));
       }
     fclose($filestream);
-    return (true);    
+    return ($i);    
   }
 
   private function	getUserByLogin($login)
@@ -118,8 +120,7 @@ class			IonisInfoSQL
 	echo 'Copy failed (file not found or local permission denied).';
 	return (false);
       }
-    $this->updateSQL();
-    return (true);
+    return ($this->updateSQL());
   }
 
   public function	checkPass($login, $pass)
