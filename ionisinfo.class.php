@@ -9,10 +9,10 @@ class			IonisInfo
 {
   var $pass_file	= '.ionis_pass';
   var $info_file	= '.ionis_info';
+  var $city_file	= '.ionis_city';
   var $pass_dfile	= '/usr/site/etc/ppp.blowfish';
   var $info_dfile	= '/usr/site/etc/passwd';
-
-  var $path_plan	= '/u/all/';
+  var $city_dfile	= '/afs/epitech.net/site/etc/location';
 
   var $login;
   var $pass;
@@ -95,6 +95,29 @@ class			IonisInfo
 	$this->student[$info[0]]['promo'] = $info_promo[1];
       }
     fclose($filestream);
+    $citys['prs'] = 'Paris';
+    $citys['lyo'] = 'Lyon';
+    $citys['paris'] = 'Paris';
+    $citys['ncy'] = 'Nancy';
+    $citys['mpl'] = 'Montpellier';
+    $citys['tls'] = 'Toulouse';
+    $citys['lil'] = 'Lille';
+    $citys['stg'] = 'Strasbourg';
+    $citys['nts'] = 'Nantes';
+    $citys['msl'] = 'Marseille';
+    $citys['nce'] = 'Nice';
+    $citys['bdx'] = 'Bordeaux';
+    $citys['rns'] = 'Rennes';
+    if (!($filestream = fopen($this->city_file, "r")))
+      return (false);
+    $this->promos = array();
+    while (!feof($filestream))
+      {
+    	$city = @split(":", fgets($filestream));
+	$this->student[$city[0]]['city'] =
+	  $citys[strtolower(trim($city[1]))];
+      }
+    fclose($filestream);
     return (true);
   }
 
@@ -128,6 +151,11 @@ class			IonisInfo
   public function	getGroup($login)
   {
     return ($this->student[$login]['group']);
+  }
+
+  public function	getCity($login)
+  {
+    return ($this->student[$login]['city']);
   }
 
   public function	getLogin($uid)

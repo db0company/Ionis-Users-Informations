@@ -26,12 +26,13 @@ Isbp, Epitech, Etna, Ipsa, Epita, e-art, Web@cademie, ...
 - Get a login from the uid :
     $ionis->getLogin($uid)
 
-- Get uid, name, group, school, promo from the login :
+- Get uid, name, group, school, promo, city from the login :
     $ionis->getUid($login);
     $ionis->getName($login);
     $ionis->getGroup($login);
     $ionis->getSchool($login);
     $ionis->getPromo($login);
+    $ionis->getCity($login);
 
 - Get Report Url :
     $ionis->getReportUrl($login);
@@ -81,6 +82,7 @@ CREATE TABLE `your_database`.`ionisusersinformations`
     `school` VARCHAR( 255 ) NOT NULL ,
     `groupe` VARCHAR( 255 ) NOT NULL ,
     `name` VARCHAR( 255 ) NOT NULL ,
+    `city` VARCHAR( 128 ) NOT NULL ,
     UNIQUE
       (
         `login`

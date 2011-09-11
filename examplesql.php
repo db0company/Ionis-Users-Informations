@@ -28,6 +28,7 @@ if (isset($_POST['login']) && isset($_POST['pass'])
       <li>Group : '.$infotech->getGroup($login).'</li>
       <li>School : '.ucwords($infotech->getSchool($login)).'</li>
       <li>Promo : '.$infotech->getPromo($login).'</li>
+      <li>City : '.$infotech->getCity($login).'</li>
       <li><a href="'.$infotech->getReportUrl($login).
       '">Intranet report</a></li>';
     if (($photo = $infotech->copyPhoto($login, 'photos')) != ''

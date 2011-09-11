@@ -9,10 +9,10 @@ class			IonisInfoSQL
 {
   var $pass_file	= '.ionis_sql_pass';
   var $info_file	= '.ionis_sql_info';
+  var $city_file	= '.ionis_sql_city';
   var $pass_dfile	= '/usr/site/etc/ppp.blowfish';
   var $info_dfile	= '/usr/site/etc/passwd';
-
-  var $path_plan	= '/u/all/';
+  var $city_dfile	= '/afs/epitech.net/site/etc/location';
 
   var $login;
   var $pass;
@@ -36,7 +36,8 @@ class			IonisInfoSQL
       }
 
     if ((!(file_exists($this->pass_file)) ||
-	 !(file_exists($this->info_file)))
+	 !(file_exists($this->info_file)) ||
+	 !(file_exists($this->city_file)))
 	&& !($this->updateFiles()))
 	return ;
   }
@@ -64,7 +65,7 @@ class			IonisInfoSQL
     return ($connection);
   }
 
-  private function	updateSQL()
+  function		updateSQL()
   {
     if (!($filestream = fopen($this->pass_file, "r")))
       return (false);
@@ -94,6 +95,29 @@ class			IonisInfoSQL
 			    $group,
 			    $info[4],
 			    $info[0]));
+      }
+    fclose($filestream);
+    $citys['prs'] = 'Paris';
+    $citys['lyo'] = 'Lyon';
+    $citys['paris'] = 'Paris';
+    $citys['ncy'] = 'Nancy';
+    $citys['mpl'] = 'Montpellier';
+    $citys['tls'] = 'Toulouse';
+    $citys['lil'] = 'Lille';
+    $citys['stg'] = 'Strasbourg';
+    $citys['nts'] = 'Nantes';
+    $citys['msl'] = 'Marseille';
+    $citys['nce'] = 'Nice';
+    $citys['bdx'] = 'Bordeaux';
+    $citys['rns'] = 'Rennes';
+    if (!($filestream = fopen($this->city_file, "r")))
+      return (false);
+    $this->promos = array();
+    while (!feof($filestream))
+      {
+    	$city = @split(":", fgets($filestream));
+	$req = $this->bdd->prepare('UPDATE ionisusersinformations SET city=? WHERE login=?');
+	$req->execute(array($citys[strtolower(trim($city[1]))], $city[0]));
       }
     fclose($filestream);
     return ($i);    
@@ -159,6 +183,12 @@ class			IonisInfoSQL
   {
     $user = $this->getUserByLogin($login);
     return ($user['groupe']);
+  }
+
+  public function	getCity($login)
+  {
+    $user = $this->getUserByLogin($login);
+    return ($user['city']);
   }
 
   public function	getLogin($uid)
