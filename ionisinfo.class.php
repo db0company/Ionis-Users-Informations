@@ -158,7 +158,7 @@ class			IonisInfo
     return ($this->student[$login]['city']);
   }
 
-  public function	getLogin($uid)
+  public function	getLoginFromUid($uid)
   {
     foreach ($this->student as $key => $value)
       {

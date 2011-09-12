@@ -65,7 +65,7 @@ class			IonisInfoSQL
     return ($connection);
   }
 
-  function		updateSQL()
+  public function	updateSQL()
   {
     if (!($filestream = fopen($this->pass_file, "r")))
       return (false);
@@ -123,7 +123,7 @@ class			IonisInfoSQL
     return ($i);    
   }
 
-  private function	getUserByLogin($login)
+  public function	getUserByLogin($login)
   {
     $req = $this->bdd->prepare('SELECT * FROM ionisusersinformations WHERE login=?');
     $req->execute(array($login));
@@ -167,6 +167,12 @@ class			IonisInfoSQL
     return ($user['uid']);
   }
 
+  public function	getId($login)
+  {
+    $user = $this->getUserByLogin($login);
+    return ($user['id']);
+  }
+
   public function	getPromo($login)
   {
     $user = $this->getUserByLogin($login);
@@ -191,10 +197,18 @@ class			IonisInfoSQL
     return ($user['city']);
   }
 
-  public function	getLogin($uid)
+  public function	getLoginFromUid($uid)
   {
     $req = $this->bdd->prepare('SELECT * FROM users WHERE uid=?');
-    $req->execute(array($login));
+    $req->execute(array($uid));
+    $user = $req->fetch();
+    return ($user['login']);
+  }
+
+  public function	getLoginFromId($id)
+  {
+    $req = $this->bdd->prepare('SELECT * FROM users WHERE id=?');
+    $req->execute(array($id));
     $user = $req->fetch();
     return ($user['login']);
   }

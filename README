@@ -24,7 +24,7 @@ Isbp, Epitech, Etna, Ipsa, Epita, e-art, Web@cademie, ...
 2) Functions
 
 - Get a login from the uid :
-    $ionis->getLogin($uid)
+     $ionis->getLoginFromUid($uid)
 
 - Get uid, name, group, school, promo, city from the login :
     $ionis->getUid($login);
@@ -99,6 +99,14 @@ CREATE TABLE `your_database`.`ionisusersinformations`
 
    See above.
 
+3) Id
+
+   - Get login from the id :
+     $ionis->getLoginFromId($id)
+
+   - Get the id from the login :
+     $ionis->getId($login);
+
 
 ==============================================================================
 ==============================================================================
@@ -130,7 +138,8 @@ as the name is changed.
  Changes :
  1.0 : password, name, promo, group, school, uid
  1.1 : photo, report, .plan
- 1.2 (current) : MySQL version
+ 1.2 : MySQL version
+ 1.3 (current) : student's citys + id on sql version
 
  /!\ Latest version is on GitHub :
      https://github.com/db0company/Ionis-Users-Informations
