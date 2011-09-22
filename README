@@ -23,8 +23,11 @@ Isbp, Epitech, Etna, Ipsa, Epita, e-art, Web@cademie, ...
 
 2) Functions
 
+- Check if a login exist
+    $ionis->isLogin($login);
+
 - Get a login from the uid :
-     $ionis->getLoginFromUid($uid)
+    $ionis->getLoginFromUid($uid)
 
 - Get uid, name, group, school, promo, city from the login :
     $ionis->getUid($login);
@@ -139,7 +142,8 @@ as the name is changed.
  1.0 : password, name, promo, group, school, uid
  1.1 : photo, report, .plan
  1.2 : MySQL version
- 1.3 (current) : student's citys + id on sql version
+ 1.3 : student's citys + id on sql version
+ 1.4 (current) : check if a login exist
 
  /!\ Latest version is on GitHub :
      https://github.com/db0company/Ionis-Users-Informations

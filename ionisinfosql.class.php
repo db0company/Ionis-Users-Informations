@@ -147,6 +147,11 @@ class			IonisInfoSQL
     return ($this->updateSQL());
   }
 
+  public function	isLogin($login)
+  {
+    return ($this->getUserByLogin($login) ? true : false);
+  }
+
   public function	checkPass($login, $pass)
   {
     $user = $this->getUserByLogin($login);

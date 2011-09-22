@@ -121,6 +121,11 @@ class			IonisInfo
     return (true);
   }
 
+  public function	isLogin($login)
+  {
+    return (isset($this->student[$login]) ? true : false);
+  }
+
   public function	checkPass($login, $pass)
   {
     return ((strcmp(crypt(stripslashes($pass),
