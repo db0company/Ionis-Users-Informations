@@ -75,23 +75,6 @@ This version keep informations in a MySQL database. It's faster.
 
 MySQL
 
-CREATE TABLE `your_database`.`ionisusersinformations`
-  (
-    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-    `login` VARCHAR( 128 ) NOT NULL ,
-    `uid` INT NOT NULL ,
-    `promo` INT NOT NULL ,
-    `pass` VARCHAR( 255 ) NOT NULL ,
-    `school` VARCHAR( 255 ) NOT NULL ,
-    `groupe` VARCHAR( 255 ) NOT NULL ,
-    `name` VARCHAR( 255 ) NOT NULL ,
-    `city` VARCHAR( 128 ) NOT NULL ,
-    UNIQUE
-      (
-        `login`
-      )
-  );
-
 ================================= [ Usage ] ==================================
 
 1) Initialisation

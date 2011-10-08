@@ -34,6 +34,8 @@ class			IonisInfoSQL
 	echo 'MySQL Connection error.';
 	return ;
       }
+    if (!($this->createTable($dbname)))
+      return ;
 
     if ((!(file_exists($this->pass_file)) ||
 	 !(file_exists($this->info_file)) ||
@@ -44,6 +46,38 @@ class			IonisInfoSQL
 
   public function	__destruct()
   {}
+
+  private function	createTable($dbname)
+  {
+    $req = $this->bdd->prepare('SELECT uid FROM ionisusersinformations');
+    if (!$req->execute())
+      {
+	$req = $this->bdd->prepare('CREATE TABLE `'.$dbname.'`.`ionisusersinformations`
+  (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+    `login` VARCHAR( 128 ) NOT NULL ,
+    `uid` INT NOT NULL ,
+    `promo` INT NOT NULL ,
+    `pass` VARCHAR( 255 ) NOT NULL ,
+    `school` VARCHAR( 255 ) NOT NULL ,
+    `groupe` VARCHAR( 255 ) NOT NULL ,
+    `name` VARCHAR( 255 ) NOT NULL ,
+    `city` VARCHAR( 128 ) NOT NULL ,
+    UNIQUE
+      (
+        `login`
+      )
+  );
+');
+	if (!($req->execute(array())))
+	  {
+	    $err = $req->errorInfo();
+	    echo $err[2];
+	    return (false);
+	  }
+      }
+    return (true);
+  }
 
   private function	sshConnect()
   {
