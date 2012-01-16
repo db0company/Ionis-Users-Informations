@@ -133,6 +133,7 @@ class			IonisInfoSQL
     fclose($filestream);
     $citys['prs'] = 'Paris';
     $citys['lyo'] = 'Lyon';
+    $citys['lyn'] = 'Lyon';
     $citys['paris'] = 'Paris';
     $citys['ncy'] = 'Nancy';
     $citys['mpl'] = 'Montpellier';
@@ -151,7 +152,7 @@ class			IonisInfoSQL
       {
     	$city = @split(":", fgets($filestream));
 	$req = $this->bdd->prepare('UPDATE ionisusersinformations SET city=? WHERE login=?');
-	$req->execute(array($citys[strtolower(trim($city[1]))], $city[0]));
+	$req->execute(array($citys[@strtolower(@trim($city[1]))], $city[0]));
       }
     fclose($filestream);
     return ($i);    
@@ -160,8 +161,9 @@ class			IonisInfoSQL
   public function	getUserByLogin($login)
   {
     $req = $this->bdd->prepare('SELECT * FROM ionisusersinformations WHERE login=?');
-    $req->execute(array($login));
-    return ($req->fetch());
+    if ($req->execute(array($login)))
+      return ($req->fetch());
+    return (false);
   }
 
   public function	updateFiles()
@@ -178,6 +180,11 @@ class			IonisInfoSQL
 	echo 'Copy failed (file not found or local permission denied).';
 	return (false);
       }
+    if (!(ssh2_scp_recv($connection, $this->city_dfile, $this->city_file)))
+      {
+	echo 'Copy failed (file not found or local permission denied).';
+	return (false);
+      }
     return ($this->updateSQL());
   }
 
@@ -188,7 +195,8 @@ class			IonisInfoSQL
 
   public function	checkPass($login, $pass)
   {
-    $user = $this->getUserByLogin($login);
+    if (!($user = $this->getUserByLogin($login)))
+      return (false);
     return ((strcmp(crypt(stripslashes($pass),
 			  $user['pass']),
 		    $user['pass'])) == 0);
