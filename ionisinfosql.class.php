@@ -17,13 +17,17 @@ class			IonisInfoSQL
   var $login;
   var $pass;
   var $bdd;
+  var $cache;
 
   public function	__construct($mysql_login, $mysql_pass, $dbname,
 				    $ionis_login = '', $ionis_pass = '')
   {
+    if (!(isset($_SESSION['iuicache'])))
+      $_SESSION['iuicache'] = array();
+    $this->cache = $_SESSION['iuicache'];
+
     $this->login = $ionis_login;
     $this->pass = $ionis_pass;
-
     try
       {
 	$this->bdd = new PDO('mysql:host=localhost;dbname='.$dbname,
@@ -45,7 +49,9 @@ class			IonisInfoSQL
   }
 
   public function	__destruct()
-  {}
+  {
+    $_SESSION['iuicache'] = $this->cache;
+  }
 
   private function	createTable($dbname)
   {
@@ -160,10 +166,15 @@ class			IonisInfoSQL
 
   public function	getUserByLogin($login)
   {
-    $req = $this->bdd->prepare('SELECT * FROM ionisusersinformations WHERE login=?');
-    if ($req->execute(array($login)))
-      return ($req->fetch());
-    return (false);
+    if (!isset($this->cache[$login]))
+      {
+	$req = $this->bdd->prepare('SELECT * FROM ionisusersinformations WHERE login=?');
+	if (!($req->execute(array($login))) ||
+	    !($user = $req->fetch()))
+	  return (false);
+	$this->cache[$login] = $user;
+      }
+    return ($this->cache[$login]);
   }
 
   public function	updateFiles()
@@ -202,10 +213,10 @@ class			IonisInfoSQL
 		    $user['pass'])) == 0);
   }
 
-  public function	getName($login)
+  public function	getName($login, $uppercase = true)
   {
     $user = $this->getUserByLogin($login);
-    return ($user['name']);
+    return ($uppercase ? ucwords($user['name']) : $user['name']);
   }
 
   public function	getUid($login)
