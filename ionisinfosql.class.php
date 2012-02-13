@@ -20,7 +20,8 @@ class			IonisInfoSQL
   var $cache;
 
   public function	__construct($mysql_login, $mysql_pass, $dbname,
-				    $ionis_login = '', $ionis_pass = '')
+				    $ionis_login = '', $ionis_pass = '',
+				    $path_local_files = '.')
   {
     if (!(isset($_SESSION['iuicache'])))
       $_SESSION['iuicache'] = array();
@@ -40,6 +41,10 @@ class			IonisInfoSQL
       }
     if (!($this->createTable($dbname)))
       return ;
+
+    $this->pass_file = $path_local_files.'/'.$this->pass_file;
+    $this->info_file = $path_local_files.'/'.$this->info_file;
+    $this->city_file = $path_local_files.'/'.$this->city_file;
 
     if ((!(file_exists($this->pass_file)) ||
 	 !(file_exists($this->info_file)) ||
