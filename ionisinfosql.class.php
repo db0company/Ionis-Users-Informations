@@ -262,7 +262,7 @@ class			IonisInfoSQL
 
   public function	getLoginFromUid($uid)
   {
-    $req = $this->bdd->prepare('SELECT * FROM users WHERE uid=?');
+    $req = $this->bdd->prepare('SELECT * FROM ionisusersinformations WHERE uid=?');
     $req->execute(array($uid));
     $user = $req->fetch();
     return ($user['login']);
@@ -270,7 +270,7 @@ class			IonisInfoSQL
 
   public function	getLoginFromId($id)
   {
-    $req = $this->bdd->prepare('SELECT * FROM users WHERE id=?');
+    $req = $this->bdd->prepare('SELECT * FROM ionisusersinformations WHERE id=?');
     $req->execute(array($id));
     $user = $req->fetch();
     return ($user['login']);
