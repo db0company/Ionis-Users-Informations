@@ -283,18 +283,26 @@ class			IonisInfoSQL
 
   public function	getPhotoUrl($login)
   {
-    if (@fopen('http://www.epitech.eu/intra/photos/'.$login.'.jpg', 'r'))
-      return ('http://www.epitech.eu/intra/photos/'.$login.'.jpg');
+    $school = $this->getSchool($login);
+    if (empty($school))
+      return ('');
+    if ($school == 'epita')
+      $photo = 'https://www.acu.epita.fr/intra/photo/'.$login;
+    else
+      $photo = 'http://www.epitech.eu/intra/photos/'.$login.'.jpg';
+    if (@fopen($photo, 'r'))
+      return ($photo);
     return ('');
   }
 
   public function	copyPhoto($login, $directory = '.')
   {
-    if (file_exists($directory.'/'.$login.'.jpg'))
-    return ($directory.'/'.$login.'.jpg');
-    if (!(@copy('http://www.epitech.eu/intra/photos/'.$login.'.jpg', $directory.'/'.$login.'.jpg')))
+    $path = $directory.'/'.$login.'.jpg';
+    if (file_exists($path))
+      return ($path);
+    if (!(@copy($this->getPhotoUrl($login), $path)))
       return ('');
-    return ($directory.'/'.$login.'.jpg');
+    return ($path);
   }
 
   public function	getPlan($login, $directory = '.')
