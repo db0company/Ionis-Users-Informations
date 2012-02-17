@@ -13,7 +13,7 @@ class			IonisInfoSQL
   var $pass_dfile	= '/usr/site/etc/ppp.blowfish';
   var $info_dfile	= '/usr/site/etc/passwd';
   var $city_dfile	= '/afs/epitech.net/site/etc/location';
-
+  var $path_local_files	= '.';
   var $login;
   var $pass;
   var $bdd;
@@ -29,6 +29,7 @@ class			IonisInfoSQL
 
     $this->login = $ionis_login;
     $this->pass = $ionis_pass;
+    $this->path_local_files = $path_local_files;
     try
       {
 	$this->bdd = new PDO('mysql:host=localhost;dbname='.$dbname,
@@ -42,15 +43,15 @@ class			IonisInfoSQL
     if (!($this->createTable($dbname)))
       return ;
 
-    $this->pass_file = $path_local_files.'/'.$this->pass_file;
-    $this->info_file = $path_local_files.'/'.$this->info_file;
-    $this->city_file = $path_local_files.'/'.$this->city_file;
+    $this->pass_file = $this->path_local_files.'/'.$this->pass_file;
+    $this->info_file = $this->path_local_files.'/'.$this->info_file;
+    $this->city_file = $this->path_local_files.'/'.$this->city_file;
 
     if ((!(file_exists($this->pass_file)) ||
 	 !(file_exists($this->info_file)) ||
 	 !(file_exists($this->city_file)))
 	&& !($this->updateFiles()))
-	return ;
+      return ;
   }
 
   public function	__destruct()
@@ -186,19 +187,20 @@ class			IonisInfoSQL
   {
     if (!($connection = $this->sshConnect()))
       return (false);
+    $error = 'Copy failed (file not found or local permission denied).';
     if (!(ssh2_scp_recv($connection, $this->pass_dfile, $this->pass_file)))
       {
-	echo 'Copy failed (file not found or local permission denied).';
+	echo $error;
 	return (false);
       }
     if (!(ssh2_scp_recv($connection, $this->info_dfile, $this->info_file)))
       {
-	echo 'Copy failed (file not found or local permission denied).';
+	echo $error;
 	return (false);
       }
     if (!(ssh2_scp_recv($connection, $this->city_dfile, $this->city_file)))
       {
-	echo 'Copy failed (file not found or local permission denied).';
+	echo $error;
 	return (false);
       }
     return ($this->updateSQL());
@@ -211,7 +213,9 @@ class			IonisInfoSQL
 
   public function	checkPass($login, $pass)
   {
-    if (!($user = $this->getUserByLogin($login)))
+    if (empty($login)
+	|| empty($pass)
+	|| !($user = $this->getUserByLogin($login)))
       return (false);
     return ((strcmp(crypt(stripslashes($pass),
 			  $user['pass']),
@@ -242,10 +246,10 @@ class			IonisInfoSQL
     return ($user['promo']);
   }
 
-  public function	getSchool($login)
+  public function	getSchool($login, $uppercase = true)
   {
     $user = $this->getUserByLogin($login);
-    return ($user['school']);
+    return ($uppercase ? ucwords($user['school']) : $user['school']);
   }
 
   public function	getGroup($login)
@@ -297,7 +301,9 @@ class			IonisInfoSQL
 
   public function	copyPhoto($login, $directory = '.')
   {
-    $path = $directory.'/'.$login.'.jpg';
+    if ($directory[0] != '/')
+      $path = $this->path_local_files.'/';
+    $path .= $directory.'/'.$login.'.jpg';
     if (file_exists($path))
       return ($path);
     if (!(@copy($this->getPhotoUrl($login), $path)))
@@ -307,21 +313,23 @@ class			IonisInfoSQL
 
   public function	getPlan($login, $directory = '.')
   {
-    if (!file_exists($directory.'/'.$login))
+    if ($directory[0] != '/')
+      $path = $this->path_local_files.'/';
+    $path .= $directory.'/'.$login;
+    if (!file_exists($path))
       {
 	if (!($connection = $this->sshConnect()))
 	  return ('');
-	if (!(@ssh2_scp_recv($connection, '/u/all/'.$login.'/public/.plan', $directory.'/'.$login)))
+	if (!(@ssh2_scp_recv($connection, '/u/all/'.$login.'/public/.plan', $path)))
 	  return ('');
       }
-    $filehand = @file($directory.'/'.$login);
+    $filehand = @file($path);
     $total = count($filehand);
     $plan = '';
     for($i = 0; $i < $total; $i++)
       $plan .= $filehand[$i];
     return ($plan);
   }
-
 
 }
 
