@@ -7,92 +7,78 @@
 A PHP Class to get informations about students in Ionis group :
 Isbp, Epitech, Etna, Ipsa, Epita, e-art, Web@cademie, ...
 
+================================= [ News! ] ==================================
+
+2012-02-17: The basic version is no longer maintained! It was too slow...
+	    Please use the SQL version from now.
 
 ============================== [ Requirement ] ===============================
 
 - PHP >= 5.3
 - libssh2-php
+- MySQL (mysql-server, php5-mysql)
 
 ================================= [ Usage ] ==================================
 
 1) Initialisation
 
-   $ionis = new IonisInfo($login, $pass);
-   where $login is your ionis (exampl_e) and $pass is your unix password.
+   $iui = new IonisInfo($mysql_login, $mysql_pass, $database_name,
+			$iui_login, $iui_unix_pass);
 
+   Optional parameter : $path_local_files (string)
 
 2) Functions
 
 - Check if a login exist
-    $ionis->isLogin($login);
+    $iui->isLogin($login);
 
 - Get a login from the uid :
-    $ionis->getLoginFromUid($uid)
+    $iui->getLoginFromUid($uid)
 
 - Get uid, name, group, school, promo, city from the login :
-    $ionis->getUid($login);
-    $ionis->getName($login);
-    $ionis->getGroup($login);
-    $ionis->getSchool($login);
-    $ionis->getPromo($login);
-    $ionis->getCity($login);
+    $iui->getUid($login);
+    $iui->getName($login); // Optional parameter $uppercase (bool)
+    $iui->getGroup($login);
+    $iui->getSchool($login); // Optional parameter $uppercase (bool)
+    $iui->getPromo($login);
+    $iui->getCity($login);
+
+- Get all informations from the login in an array :
+    $iui->getUserByLogin($login);
 
 - Get Report Url :
-    $ionis->getReportUrl($login);
+    $iui->getReportUrl($login);
 
 - Get photos :
-    $ionis->getPhotoUrl($login);
+    $iui->getPhotoUrl($login);
     get the url from the intra.
-    $ionis->copyPhoto($login, $directory);
+    $iui->copyPhoto($login, $directory);
     copy the photo locally.
 
 - Get .plan file :
-    $ionis->getPlan($plan);
+    $iui->getPlan($plan);
     copy the .plan public file (afs) locally and return its content.
 
 - Check the PPP password :
-    $ionis->checkPass($login, $pass);
+    $iui->checkPass($login, $pass);
     return true if the password match for the login, false otherwise.
 
 - Update informations files
-    $ionis->updateFiles();
+    $iui->updateFiles();
     update the informations files. Good idea to put it in a crontab.
+
+- Get MySQL table Id
+
+   - Get login from the id :
+     $iui->getLoginFromId($id)
+
+   - Get the id from the login :
+     $iui->getId($login);
 
 
 3) Example
 
    See the example.php file.
-
-
-==============================================================================
-==============================================================================
-============================= [ MySQL Version ] ==============================
-==============================================================================
-
-This version keep informations in a MySQL database. It's faster.
-
-============================== [ Requirement ] ===============================
-
-MySQL
-
-================================= [ Usage ] ==================================
-
-1) Initialisation
-
-   new IonisInfoSQL($mysql_login, $mysql_pass, $database_name, $ionis_login, $ionis_unix_pass);
-
-2) Other informations
-
-   See above.
-
-3) Id
-
-   - Get login from the id :
-     $ionis->getLoginFromId($id)
-
-   - Get the id from the login :
-     $ionis->getId($login);
-
 
 ==============================================================================
 ==============================================================================
@@ -102,7 +88,7 @@ MySQL
            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
                    Version 2, December 2004
  
-Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+Copyright (C) 2012 Barbara Lepage <db0company@gmail.com>
  
 Everyone is permitted to copy and distribute verbatim or modified
 copies of this license document, and changing it is allowed as long
@@ -121,12 +107,6 @@ as the name is changed.
 
 ================================= [ Versions ] ===============================
 
- Changes :
- 1.0 : password, name, promo, group, school, uid
- 1.1 : photo, report, .plan
- 1.2 : MySQL version
- 1.3 : student's citys + id on sql version
- 1.4 (current) : check if a login exist
-
  /!\ Latest version is on GitHub :
      https://github.com/db0company/Ionis-Users-Informations
+

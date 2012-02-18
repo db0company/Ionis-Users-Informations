@@ -6,37 +6,45 @@
   //
 
 include('ionisinfo.class.php');
-$infotech = new IonisInfo('exampl_e', '2q4xfcc3');
+$iui = new IonisInfo('tony', 'password', 'my_database', 'exampl_e', '2q4xfcc3');
 
 echo '
 <html>
   <head>
-    <title>Ionis User Information</title>
+    <title>Ionis Users Informations</title>
   </head>
   <body>
 ';
 
 if (isset($_POST['login']) && isset($_POST['pass'])
-    && $infotech->checkPass($_POST['login'], $_POST['pass']))
+    && $iui->checkPass($_POST['login'], $_POST['pass']))
   {
-    $login = $_POST['login'];
-    echo '
+    if (empty($_POST['infos']))
+      $login = $_POST['login'];
+    else
+      $login = $_POST['infos'];
+    if (!$iui->isLogin($login))
+      echo 'Unknown login.';
+    else
+      {
+	echo '
     <ul>
       <li>Login : '.$login.'</li>
-      <li>Uid : '.$infotech->getUid($login).'</li>
-      <li>Name : '.ucwords($infotech->getName($login)).'</li>
-      <li>Group : '.$infotech->getGroup($login).'</li>
-      <li>School : '.ucwords($infotech->getSchool($login)).'</li>
-      <li>Promo : '.$infotech->getPromo($login).'</li>
-      <li>City : '.$infotech->getCity($login).'</li>
-      <li><a href="'.$infotech->getReportUrl($login).
+      <li>Uid : '.$iui->getUid($login).'</li>
+      <li>Name : '.ucwords($iui->getName($login)).'</li>
+      <li>Group : '.$iui->getGroup($login).'</li>
+      <li>School : '.ucwords($iui->getSchool($login)).'</li>
+      <li>Promo : '.$iui->getPromo($login).'</li>
+      <li>City : '.$iui->getCity($login).'</li>
+      <li><a href="'.$iui->getReportUrl($login).
       '">Intranet report</a></li>';
-    if (($photo = $infotech->copyPhoto($login, 'photos')) != ''
-	|| (($photo = $infotech->getPhotoUrl($login))) != '')
-      echo '<li>Photo : <img src="'.$photo.'" /></li>';
-    if (($plan = $infotech->getPlan($login, 'plan')) != '')
-      echo '<li>.Plan : <pre>'.$plan.'</pre></li>';
-    echo '    </ul>';
+	if (($photo = $iui->copyPhoto($login, 'photos')) != ''
+	    || (($photo = $iui->getPhotoUrl($login))) != '')
+	  echo '<li>Photo : <img src="'.$photo.'" /></li>';
+	if (($plan = $iui->getPlan($login, 'plan')) != '')
+	  echo '<li>.Plan : <pre>'.$plan.'</pre></li>';
+	echo '    </ul>';
+      }
   }
  else
    {
@@ -46,6 +54,8 @@ if (isset($_POST['login']) && isset($_POST['pass'])
       <input type="text" name="login" value="" /><br />
       <label for="pass">Pass PPP : </label>
       <input type="password" name="pass" value="" /><br />
+      <label for="pass">Informations about : </label>
+      <input type="text" name="infos" value="" /><br />
       <input type="submit" value="OK" /><br />
     </form>
 ';
