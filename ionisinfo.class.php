@@ -331,6 +331,15 @@ class			IonisInfo
     return ($plan);
   }
 
-}
+  public function	search($searchString, $maxResults = 20)
+  {
+    $term = '%'.$searchString.'%';
+    $req = $this->bdd->prepare('
+       SELECT login FROM ionisusersinformations
+       WHERE login LIKE ? OR name LIKE ?
+       LIMIT '. intval($maxResults));
+    $req->execute(array($term, $term));
+    return $req->fetchAll(PDO::FETCH_COLUMN, 0);
+  }
 
-?>
+}

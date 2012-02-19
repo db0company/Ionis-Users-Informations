@@ -11,5 +11,3 @@ class			IonisInfoSQL extends IonisInfo
 {
   // This class is left here for backwards compatibility purpose.
 }
-
-?>
