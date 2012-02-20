@@ -37,7 +37,7 @@ class			IonisInfo
       }
     catch (Exception $e)
       {
-	echo 'MySQL Connection error.';
+	echo "MySQL Connection error.\n";
 	return ;
       }
     if (!($this->createTable($dbname)))
@@ -95,17 +95,17 @@ class			IonisInfo
   {
     if ($this->login == '' || $this->pass == '')
       {
-	echo "Login and password not set";
+	echo "Login and password not set.\n";
 	return (false);
       }
     if (!($connection = @ssh2_connect('ssh.epitech.eu', 22)))
     {
-      echo 'SSH connection failed.';
+      echo "SSH connection failed.\n";
       return (false);
     }
     if (!(@ssh2_auth_password($connection, $this->login, $this->pass)))
       {
-	echo 'Authentification failed.';
+	echo "Authentification failed.\n";
 	return (false);
       }
     return ($connection);
@@ -187,7 +187,7 @@ class			IonisInfo
   {
     if (!($connection = $this->sshConnect()))
       return (false);
-    $error = 'Copy failed (file not found or local permission denied).';
+    $error = "Copy failed (file not found or local permission denied).\n";
     if (!(ssh2_scp_recv($connection, $this->pass_dfile, $this->pass_file)))
       {
 	echo $error;
