@@ -339,7 +339,7 @@ class			IonisInfo
        WHERE login LIKE ? OR name LIKE ? ORDER BY login'.
 			       (!$maxResults ?
 				''
-				: ('LIMIT '.intval($maxResults)));
+				: ('LIMIT '.intval($maxResults))));
     $req->execute(array($term, $term));
     return $req->fetchAll(PDO::FETCH_COLUMN, 0);
   }
