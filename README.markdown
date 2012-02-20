@@ -148,6 +148,10 @@ where the return value is true on success, false otherwise.
 This function **update** the informations files and the MySQL database.
 
 **Good idea to put it in a crontab!**
+See the update.php example file.
+
+Example of crontab line :
+     @daily php5 /path/to/file/update.php
 
 ### Get MySQL table Id
 
