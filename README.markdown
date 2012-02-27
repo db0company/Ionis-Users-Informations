@@ -21,7 +21,8 @@ Initialisation
      IonisInfo::__construct(string $mysql_login, string $mysql_pass,
      			    string $database_name
 			    [, string $iui_login, string $iui_unix_pass,
-			       string $path_local_files]);
+			       string $path_local_files,
+			       bool $afs]);
 
 where $mysql_login is the **username** used by MySQL to connect
 and   $mysql_pass is the **password** corresponding to the username
@@ -29,12 +30,12 @@ and   $database_name is the **name of the MySQL database** (must exist, will not
 and   $iui_login is your **Ionis login**
 and   $iui_pass is your **Ionis unix password** (the one that open your unix sessions)
 and   $path_local_files is the **path** where files will be copied (default value = '.').
+and   $afs is true if the AFS is mounted on your server, false otherwise.
 
-If $iui_login and $iui_pass are not specified, it will work only if
+If $afs is false and $iui_login and $iui_pass are not specified, it will work only if
 the database has already been filled and the following functions will
 fail, so you must not use them :
 
-* IonisInfo::copyPhoto
 * IonisInfo::getPlan
 * IonisInfo::updateFiles
 

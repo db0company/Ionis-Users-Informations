@@ -10,9 +10,10 @@ class			IonisInfo
   var $pass_file	= '.ionis_sql_pass';
   var $info_file	= '.ionis_sql_info';
   var $city_file	= '.ionis_sql_city';
-  var $pass_dfile	= '/usr/site/etc/ppp.blowfish';
-  var $info_dfile	= '/usr/site/etc/passwd';
+  var $pass_dfile	= '/afs/epitech.net/site/etc/ppp.blowfish';
+  var $info_dfile	= '/afs/epitech.net/site/etc/passwd';
   var $city_dfile	= '/afs/epitech.net/site/etc/location';
+  var $afs;
   var $path_local_files	= '.';
   var $login;
   var $pass;
@@ -21,7 +22,7 @@ class			IonisInfo
 
   public function	__construct($mysql_login, $mysql_pass, $dbname,
 				    $ionis_login = '', $ionis_pass = '',
-				    $path_local_files = '.')
+				    $path_local_files = '.', $afs = false)
   {
     if (!(isset($_SESSION['iuicache'])))
       $_SESSION['iuicache'] = array();
@@ -43,6 +44,7 @@ class			IonisInfo
     if (!($this->createTable($dbname)))
       return ;
 
+    $this->afs = $afs;
     $this->pass_file = $this->path_local_files.'/'.$this->pass_file;
     $this->info_file = $this->path_local_files.'/'.$this->info_file;
     $this->city_file = $this->path_local_files.'/'.$this->city_file;
@@ -183,7 +185,7 @@ class			IonisInfo
     return ($this->cache[$login]);
   }
 
-  public function	updateFiles()
+  private function	updateRemoteFiles()
   {
     if (!($connection = $this->sshConnect()))
       return (false);
@@ -203,6 +205,34 @@ class			IonisInfo
 	echo $error;
 	return (false);
       }
+    return (true);
+  }
+
+  private function	updateLocalFiles()
+  {
+    $error = "Copy failed (file not found or local permission denied).\n";
+    if (!copy($this->pass_dfile, $this->pass_file))
+      {
+	echo $error;
+	return (false);
+      }
+    if (!copy($this->info_dfile, $this->info_file))
+      {
+	echo $error;
+	return (false);
+      }
+    if (!copy($this->city_dfile, $this->city_file))
+      {
+	echo $error;
+	return (false);
+      }
+    return (true);
+  }
+
+  public function	updateFiles()
+  {
+    if (!($this->afs ? $this->updateLocalFiles() : $this->updateRemoteFiles()))
+      return (false);
     return ($this->updateSQL());
   }
 
@@ -318,9 +348,13 @@ class			IonisInfo
     $path .= $directory.'/'.$login;
     if (!file_exists($path))
       {
-	if (!($connection = $this->sshConnect()))
-	  return ('');
-	if (!(@ssh2_scp_recv($connection, '/u/all/'.$login.'/public/.plan', $path)))
+	if (!$this->afs)
+	  {
+	    if (!($connection = $this->sshConnect())
+		|| (!(@ssh2_scp_recv($connection, '/u/all/'.$login.'/public/.plan', $path))))
+	      return ('');
+	  }
+	elseif (!copy('/afs/epitech.net/users/all/'.$login.'/public/.plan', $path))
 	  return ('');
       }
     $filehand = @file($path);
