@@ -1,15 +1,20 @@
 <?php
 
-$class_absolute_path = '/home/foo/example/';
+define('INTRA_BETWEEN_TRANSAC',	0.1);
+define('INTRA_URL_MAIN',		'http://www.epitech.eu/intra/');
+define('INTRA_USERAGENT',		'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.186 Safari/535.1');
 
-$mysql_login = 'foo';
-$mysql_pass = 'bar';
+$class_absolute_path = dirname(__FILE__);
+
+$mysql_login = 'login';
+$mysql_pass = 'password';
 
 // You must create it if it does not exists.
-$mysql_dbname = 'my_database';
+$mysql_dbname = 'ionis';
 
 $ionis_login = 'exampl_e';
-$ionis_unix_password = '2q4xfcc3';
+$ionis_unix_password = '';
+$intra_password = '';
 
-$absolute_path_local_files = '/home/foo/example/files/';
+$absolute_path_local_files = dirname(__FILE__).'/local_files';
 
