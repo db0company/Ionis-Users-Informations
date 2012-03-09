@@ -25,8 +25,8 @@ class			IonisInfo
 
   public function	__construct($mysql_login, $mysql_pass, $dbname,
 				    $ionis_login = '', $ionis_pass = '',
-					$pass_ppp,
-				    $path_local_files = '.', $afs = false)
+				    $path_local_files = '.', $afs = false,
+				    $ionis_ppp_pass = '')
   {
     if (!(isset($_SESSION['iuicache'])))
       $_SESSION['iuicache'] = array();
