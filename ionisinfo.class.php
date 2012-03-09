@@ -35,7 +35,7 @@ class			IonisInfo
     $this->login = $ionis_login;
     $this->pass = $ionis_pass;
     $this->path_local_files = $path_local_files;
-	$this->intra_pass = $pass_ppp;
+	$this->intra_pass = $ionis_ppp_pass;
 	$this->intra_is_connected = false;
     try
       {
