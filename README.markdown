@@ -179,6 +179,49 @@ and   $maxResults is the limit of result you want
 and   return value is an **array of string** containing the logins matching
       the query in their names or login.
 
+### Get informations from intranet
+
+###### login to the intranet
+
+	bool	IonisInfo::intra_login();
+
+This function tries to connect to the intranet using the login and the password
+provided in the configuration file. It returns true if the connection succeed
+or false if it fails.
+
+###### fetch marks
+
+       Array	IonisInfo::fetch_notes(string $login, string $scolaryear);
+
+where $login is the login we want to obtain the marks
+and   $scolaryear is the year which we want the marks
+and   return value is an **array of string** containing the marks of the login
+
+###### fetch modules
+
+       Array	IonisInfo::fetch_modules(string $login, string $scolaryear);
+
+where $login is the login we want to obtain the modules
+and   $scolaryear is the year which we want the modules
+and   return value is an **array of array** containing multiples informations
+      on modules such as grade or number of credits
+
+###### fetch students
+
+       Array	IonisInfo::fetch_users(string $promo, string $ville);
+
+where $promo is the promotion you want the students list
+and   $ville is the town of a specific promotion
+and   return value is an **array of array** in which each case contains
+      the first name, the last name, and the login of the student
+
+###### calculate GPA
+       
+       float	IonisInfo::calc_gpa($modules);
+
+where $modules is an **array** of modules you want to calculate the GPA
+and   return value is a float number representing the value of the GPA
+
 Example
 -------
 
