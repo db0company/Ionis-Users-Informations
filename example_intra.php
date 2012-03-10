@@ -20,5 +20,8 @@ $gpa = $iui->calc_gpa($modules);
 
 echo "$ionis_login's GPA : ".number_format($gpa, 3);
 
+$users = $iui->fetch_users('epitech_2015', 'paris');
+var_dump($users);
+
 ?>
 

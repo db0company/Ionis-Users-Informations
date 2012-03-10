@@ -35,8 +35,8 @@ class			IonisInfo
     $this->login = $ionis_login;
     $this->pass = $ionis_pass;
     $this->path_local_files = $path_local_files;
-	$this->intra_pass = $ionis_ppp_pass;
-	$this->intra_is_connected = false;
+    $this->intra_pass = $ionis_ppp_pass;
+    $this->intra_is_connected = false;
     try
       {
 	$this->bdd = new PDO('mysql:host=localhost;dbname='.$dbname,
@@ -54,7 +54,7 @@ class			IonisInfo
     $this->pass_file = $this->path_local_files.'/'.$this->pass_file;
     $this->info_file = $this->path_local_files.'/'.$this->info_file;
     $this->city_file = $this->path_local_files.'/'.$this->city_file;
-	$this->intra_fcookie = $this->path_local_files.'/.cookie_'.$this->login.'.txt';
+    $this->intra_fcookie = $this->path_local_files.'/.cookie_'.$this->login.'.txt';
 
     if ((!(file_exists($this->pass_file)) ||
 	 !(file_exists($this->info_file)) ||
@@ -108,10 +108,10 @@ class			IonisInfo
 	return (false);
       }
     if (!($connection = @ssh2_connect('ssh.epitech.eu', 22)))
-    {
-      echo "SSH connection failed.\n";
-      return (false);
-    }
+      {
+	echo "SSH connection failed.\n";
+	return (false);
+      }
     if (!(@ssh2_auth_password($connection, $this->login, $this->pass)))
       {
 	echo "Authentification failed.\n";
@@ -386,99 +386,99 @@ class			IonisInfo
   }
   
   /*
-  **********************************
-  ** Intra functions
-  ************************************
-  */
+   **********************************
+   ** Intra functions
+   ************************************
+   */
   
   public function	intra_login()
   {
-	if (function_exists('curl_init') === false)
-	{
-		echo "Error : this functionality requires php_curl extension\n";
-		return false;
-	}
-	$this->intra_time = 0;
-	if (($this->intra_connect = curl_init()) === false)
-	{
-		echo "Error : could not init curl connection";
-		return false;
-	}
-	if (empty($this->login) || empty($this->intra_pass))
-	{
-		echo "Error : login and password must be set for any transaction with intra";
-		return false;
-	}
-	$postvars  = 'action=login';
-	$postvars .= '&path=index.php';
-	$postvars .= '&login='.$this->login;
-	$postvars .= '&passwd='.$this->intra_pass;
-	$postvars .= '&qs=/intra/index.php';
+    if (function_exists('curl_init') === false)
+      {
+	echo "Error : this functionality requires php_curl extension\n";
+	return false;
+      }
+    $this->intra_time = 0;
+    if (($this->intra_connect = curl_init()) === false)
+      {
+	echo "Error : could not init curl connection";
+	return false;
+      }
+    if (empty($this->login) || empty($this->intra_pass))
+      {
+	echo "Error : login and password must be set for any transaction with intra";
+	return false;
+      }
+    $postvars  = 'action=login';
+    $postvars .= '&path=index.php';
+    $postvars .= '&login='.$this->login;
+    $postvars .= '&passwd='.$this->intra_pass;
+    $postvars .= '&qs=/intra/index.php';
     curl_setopt($this->intra_connect, CURLOPT_COOKIEFILE, $this->intra_fcookie);
     curl_setopt($this->intra_connect, CURLOPT_COOKIEJAR, $this->intra_fcookie);  
     curl_setopt($this->intra_connect, CURLOPT_COOKIESESSION, true);
     curl_setopt($this->intra_connect, CURLOPT_FOLLOWLOCATION, true);
-	curl_setopt($this->intra_connect, CURLOPT_HEADER, false);
-	curl_setopt($this->intra_connect, CURLOPT_RETURNTRANSFER,true);
+    curl_setopt($this->intra_connect, CURLOPT_HEADER, false);
+    curl_setopt($this->intra_connect, CURLOPT_RETURNTRANSFER,true);
     curl_setopt($this->intra_connect, CURLOPT_URL, INTRA_URL_MAIN);
-	curl_setopt($this->intra_connect, CURLOPT_USERAGENT, INTRA_USERAGENT);
+    curl_setopt($this->intra_connect, CURLOPT_USERAGENT, INTRA_USERAGENT);
     curl_setopt($this->intra_connect, CURLOPT_POSTFIELDS, $postvars);
-	curl_setopt($this->intra_connect, CURLOPT_POST, true);
-	curl_setopt($this->intra_connect, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($this->intra_connect, CURLOPT_POST, true);
+    curl_setopt($this->intra_connect, CURLOPT_SSL_VERIFYPEER, false);
     if ($this->do_transaction($this->intra_connect) === false)
-		return false;
-	$this->intra_is_connected = true;
-	return true;
+      return false;
+    $this->intra_is_connected = true;
+    return true;
   }
   
   private function	do_transaction($handler)
   {
-	if ($this->intra_time !== 0)
-		while ((microtime(true) - $this->intra_time) < INTRA_BETWEEN_TRANSAC) echo "Wait<br/>";
-	$this->intra_time = microtime(true);
-	if (($ret = curl_exec($handler)) === false)
-	{
-		echo "Error : HTTP transaction could not be done\n";
-		return false;
-	}
-	return $ret;
+    if ($this->intra_time !== 0)
+      while ((microtime(true) - $this->intra_time) < INTRA_BETWEEN_TRANSAC);
+    $this->intra_time = microtime(true);
+    if (($ret = curl_exec($handler)) === false)
+      {
+	echo "Error : HTTP transaction could not be done\n";
+	return false;
+      }
+    return $ret;
   }
   
   public function fetch_notes($login, $scolaryear)
   {
-	if ($this->intra_is_connected === false)
-	{
-		echo "Error : fetching notes requires connection to intra.\n";
-		return false;
-	}
+    if ($this->intra_is_connected === false)
+      {
+	echo "Error : fetching notes requires connection to intra.\n";
+	return false;
+      }
     $url = INTRA_URL_MAIN."?section=etudiant&page=rapport&login=$login&open_div=1&scolaryear_notes=$scolaryear";
     curl_setopt($this->intra_connect, CURLOPT_URL, $url);
     curl_setopt($this->intra_connect, CURLOPT_POST, false);
     if (($ret = $this->do_transaction($this->intra_connect)) === false)
-		return false;
+      return false;
     $html = new DOMDocument();
     @$html->loadHTML($ret);
     $xpath = new DOMXPath($html);
     $divs = $xpath->query('//div');
     foreach ($divs as $div)
       {
-		if ($div->getAttribute("id") == "div1")
-		{
-			$elements = $div->getElementsByTagName("tr");
-			foreach ($elements as $element)
-			{
-				if ($element->firstChild->getAttribute("class") == "default")
-				  continue;
-				$childs = $element->childNodes;
-				$note = Array();
-				foreach ($childs as $child)
-				{
-					if ($child->nodeName == "td")
-					$note[] = trim($child->nodeValue);
-				}
-				$notes[] = $note;
-			}
-		}
+	if ($div->getAttribute("id") == "div1")
+	  {
+	    $elements = $div->getElementsByTagName("tr");
+	    foreach ($elements as $element)
+	      {
+		if ($element->firstChild->getAttribute("class") == "default")
+		  continue;
+		$childs = $element->childNodes;
+		$note = Array();
+		foreach ($childs as $child)
+		  {
+		    if ($child->nodeName == "td")
+		      $note[] = trim($child->nodeValue);
+		  }
+		$notes[] = $note;
+	      }
+	  }
       }
     return $notes;
   }
@@ -489,77 +489,77 @@ class			IonisInfo
     curl_setopt($this->intra_connect, CURLOPT_URL, $url);
     curl_setopt($this->intra_connect, CURLOPT_POST, false);
     if (($ret = $this->do_transaction($this->intra_connect)) === false)
-		return false;
+      return false;
     $html = new DOMDocument();
     @$html->loadHTML($ret);
     $xpath = new DOMXPath($html);
     $divs = $xpath->query('//div');
     foreach ($divs as $div)
-    {
-		if ($div->getAttribute("id") == "div9")
-		{
-			$elements = $div->getElementsByTagName("tr");
-			foreach ($elements as $element)
-			{
-				if ($element->firstChild->getAttribute("class") == "default")
-				  continue;
-				$childs = $element->childNodes;
-				$module = Array();
-				foreach ($childs as $child)
-				{
-					if ($child->nodeName == "td")
-					$module[] = trim($child->nodeValue);
-				}
-				$modules[] = $module;
-			}
-		}
+      {
+	if ($div->getAttribute("id") == "div9")
+	  {
+	    $elements = $div->getElementsByTagName("tr");
+	    foreach ($elements as $element)
+	      {
+		if ($element->firstChild->getAttribute("class") == "default")
+		  continue;
+		$childs = $element->childNodes;
+		$module = Array();
+		foreach ($childs as $child)
+		  {
+		    if ($child->nodeName == "td")
+		      $module[] = trim($child->nodeValue);
+		  }
+		$modules[] = $module;
+	      }
+	  }
       }
     return $modules;
   }
   
-	public function calc_gpa($modules)
-	{
-		$nb_credits = 0;
-		$score = 0;
-		foreach ($modules as $module)
-		{
-			$grade = explode("/", $module[5]);
-			$grade = trim($grade[1]);
-			if ($grade != "-" && $grade != "Acquis")
-			{
-				$nb_credits += $module[3];
-				$score += $module[3] * ($grade == 'A' ? 4 : ($grade == 'B' ? 3 : ($grade == 'C' ? 2 : ($grade == 'D' ? 1 : 0))));	    
-			}
-		}
-		 return $score / $nb_credits;
-	}
+  public function calc_gpa($modules)
+  {
+    $nb_credits = 0;
+    $score = 0;
+    foreach ($modules as $module)
+      {
+	$grade = explode("/", $module[5]);
+	$grade = trim($grade[1]);
+	if ($grade != "-" && $grade != "Acquis")
+	  {
+	    $nb_credits += $module[3];
+	    $score += $module[3] * ($grade == 'A' ? 4 : ($grade == 'B' ? 3 : ($grade == 'C' ? 2 : ($grade == 'D' ? 1 : 0))));	    
+	  }
+      }
+    return $score / $nb_credits;
+  }
 	
-	public function fetch_users($promo, $ville)
-	{
-		$url = INTRA_URL_MAIN."?section=all&page=trombi&mfrom=etudiant";
-		$postvars = "promo=$promo&ville=$ville&custom_list=&Send=send";
-		$users = Array();
-		curl_setopt($this->ch, CURLOPT_URL, $url);
-		curl_setopt($this->ch, CURLOPT_POSTFIELDS, $postvars);
-		if (($ret = $this->do_transaction($this->intra_connect)) === false)
-			return false;
-		$html = new DOMDocument();
-		$html->loadHTML($ret);
-		$xpath = new DOMXPath($html);
-		$tables = $xpath->query('//table');
-		foreach ($tables as $table)
-		{
-			if ($table->getAttribute("align") == "middle" && $table->getAttribute("width") == "90%")
-			{
-				$elems = $table->getElementsByTagName("a");
-				foreach ($elems as $elem)
-				{
-					$user = explode(" ", $elem->getAttribute("title"));
-					$user[2] = substr(trim($elem->textContent), 0, strpos(trim($elem->textContent), " "));
-					$users[] = $user;
-				}
-			}
-		}
-		return $users;
-	}
+  public function fetch_users($promo, $ville)
+  {
+    $url = INTRA_URL_MAIN."?section=all&page=trombi&mfrom=etudiant";
+    $postvars = "promo=$promo&ville=$ville&custom_list=&Send=send";
+    $users = Array();
+    curl_setopt($this->intra_connect, CURLOPT_URL, $url);
+    curl_setopt($this->intra_connect, CURLOPT_POSTFIELDS, $postvars);
+    if (($ret = $this->do_transaction($this->intra_connect)) === false)
+      return false;
+    $html = new DOMDocument();
+    $html->loadHTML($ret);
+    $xpath = new DOMXPath($html);
+    $tables = $xpath->query('//table');
+    foreach ($tables as $table)
+      {
+	if ($table->getAttribute("align") == "middle" && $table->getAttribute("width") == "90%")
+	  {
+	    $elems = $table->getElementsByTagName("a");
+	    foreach ($elems as $elem)
+	      {
+		$user = explode(" ", $elem->getAttribute("title"));
+		$user[2] = substr(trim($elem->textContent), 0, strpos(trim($elem->textContent), " "));
+		$users[] = $user;
+	      }
+	  }
+      }
+    return $users;
+  }
 }

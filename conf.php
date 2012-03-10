@@ -12,7 +12,7 @@ $mysql_pass = 'password';
 // You must create it if it does not exists.
 $mysql_dbname = 'ionis';
 
-$ionis_login = 'exampl_e';
+$ionis_login = '';
 $ionis_unix_password = '';
 $intra_password = '';
 
