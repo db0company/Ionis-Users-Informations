@@ -324,16 +324,17 @@ class			IonisInfo
 
   public function	getPhotoUrl($login)
   {
+    $default = 'http://www.epitech.eu/intra/photos/no.jpg';
     $school = $this->getSchool($login);
     if (empty($school))
-      return ('');
+      return ($default);
     if ($school == 'epita')
       $photo = 'https://www.acu.epita.fr/intra/photo/'.$login;
     else
       $photo = 'http://www.epitech.eu/intra/photos/'.$login.'.jpg';
     if (@fopen($photo, 'r'))
       return ($photo);
-    return ('');
+    return ($default);
   }
 
   public function	copyPhoto($login, $directory = '.')
@@ -357,11 +358,11 @@ class			IonisInfo
       {
 	if (!$this->afs)
 	  {
-	    if (!($connection = $this->sshConnect())
+	    if (!($connection = @$this->sshConnect())
 		|| (!(@ssh2_scp_recv($connection, '/u/all/'.$login.'/public/.plan', $path))))
 	      return ('');
 	  }
-	elseif (!copy('/afs/epitech.net/users/all/'.$login.'/public/.plan', $path))
+	elseif (!@copy('/afs/epitech.net/users/all/'.$login.'/public/.plan', $path))
 	  return ('');
       }
     $filehand = @file($path);
