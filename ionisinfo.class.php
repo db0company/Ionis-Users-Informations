@@ -179,8 +179,14 @@ class			IonisInfo
     return ($i);    
   }
 
+  private function	cleanLogin($login)
+  {
+    return (trim(strtolower($login)));
+  }
+
   public function	getUserByLogin($login)
   {
+    $login = $this->cleanLogin($login);
     if (!isset($this->cache[$login]))
       {
 	$req = $this->bdd->prepare('SELECT * FROM ionisusersinformations WHERE login=?');
@@ -303,6 +309,7 @@ class			IonisInfo
 
   public function	getLoginFromUid($uid)
   {
+    $uid = $this->cleanLogin($uid);
     $req = $this->bdd->prepare('SELECT * FROM ionisusersinformations WHERE uid=?');
     $req->execute(array($uid));
     $user = $req->fetch();
@@ -311,6 +318,7 @@ class			IonisInfo
 
   public function	getLoginFromId($id)
   {
+    $id = $this->cleanLogin($id);
     $req = $this->bdd->prepare('SELECT * FROM ionisusersinformations WHERE id=?');
     $req->execute(array($id));
     $user = $req->fetch();
@@ -319,13 +327,15 @@ class			IonisInfo
 
   public function	getReportUrl($login)
   {
+    $login = $this->cleanLogin($login);
     return ('http://www.epitech.eu/intra/index.php?section=etudiant&page=rapport&login='.$login);
   }
 
   public function	getPhotoUrl($login)
   {
+    $login = $this->cleanLogin($login);
     $default = 'http://www.epitech.eu/intra/photos/no.jpg';
-    $school = $this->getSchool($login);
+    $school = strtolower($this->getSchool($login));
     if (empty($school))
       return ($default);
     if ($school == 'epita')
@@ -339,6 +349,7 @@ class			IonisInfo
 
   public function	copyPhoto($login, $directory = '.')
   {
+    $login = $this->cleanLogin($login);
     if ($directory[0] != '/')
       $path = $this->path_local_files.'/';
     $path .= $directory.'/'.$login.'.jpg';
@@ -351,6 +362,7 @@ class			IonisInfo
 
   public function	getPlan($login, $directory = '.')
   {
+    $login = $this->cleanLogin($login);
     if ($directory[0] != '/')
       $path = $this->path_local_files.'/';
     $path .= $directory.'/'.$login;
@@ -375,6 +387,7 @@ class			IonisInfo
 
   public function	search($searchString, $maxResults = 0)
   {
+    $login = $this->cleanLogin($login);
     $term = '%'.$searchString.'%';
     $req = $this->bdd->prepare('
        SELECT login FROM ionisusersinformations
@@ -447,6 +460,7 @@ class			IonisInfo
   
   public function fetch_notes($login, $scolaryear)
   {
+    $login = $this->cleanLogin($login);
     if ($this->intra_is_connected === false)
       {
 	echo "Error : fetching notes requires connection to intra.\n";
@@ -486,6 +500,7 @@ class			IonisInfo
   
   public function fetch_modules($login, $scolaryear)
   {
+    $login = $this->cleanLogin($login);
     $url = INTRA_URL_MAIN."?section=etudiant&page=rapport&login=$login&open_div=9&scolaryear=$scolaryear";
     curl_setopt($this->intra_connect, CURLOPT_URL, $url);
     curl_setopt($this->intra_connect, CURLOPT_POST, false);
