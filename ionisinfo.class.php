@@ -385,6 +385,14 @@ class			IonisInfo
     return ($plan);
   }
 
+  public function	getPhone($login, $directory = '.')
+  {
+    $plan = $this->getPlan($login, $directory);
+    $matches = array();
+    preg_match("/((\d){2}[\s.-]*){4,6}/", $plan, $matches);
+    return ($matches[0]);
+  }
+
   public function	search($searchString, $maxResults = 0)
   {
     $login = $this->cleanLogin($login);
