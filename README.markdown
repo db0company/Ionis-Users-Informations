@@ -124,6 +124,19 @@ and   return value is the content of the **.plan file** on the AFS
 
 This function copy the .plan public file (afs) locally.
 
+###### getPhone - Get the phone number using the .plan file
+
+     string	IonisInfo::getPhone(string $login[, string $directory]);
+
+where $login is the **login** you are looking for
+and   $directory is the path where you want the .plan file to be copied
+      (it can be an absolute path or a relative path that will be
+      concatenate with the path given in the constructor)
+and   return value is the phone number in the .plan file
+      or an empty string on failure.
+
+This function copy the .plan public file (afs) locally.
+
 ###### checkPass - Check the PPP password
      bool	IonisInfo::checkPass(string $login, string $pass);
 
