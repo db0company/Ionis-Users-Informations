@@ -406,7 +406,19 @@ class			IonisInfo
     $req->execute(array($term, $term));
     return $req->fetchAll(PDO::FETCH_COLUMN, 0);
   }
-  
+
+  public function	getLogins($school = 0, $promo = 0, $city = 0)
+  {
+    global $bdd;
+    $req = $bdd->prepare('
+       SELECT login FROM ionisusersinformations
+       WHERE school LIKE ? AND promo LIKE ? AND city LIKE ?');
+    $req->execute(array((empty($school) ? "%" : $school),
+			(empty($promo) ? "%" : $promo),
+			(empty($city) ? "%" : $city)));
+    return $req->fetchAll(PDO::FETCH_COLUMN, 0);
+  }
+
   /*
    **********************************
    ** Intra functions
