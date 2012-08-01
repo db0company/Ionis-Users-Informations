@@ -185,12 +185,25 @@ and   return value is the **id** corresponding to the login.
 
 ### Search
 
+###### Search by login/name
+
       Array	IonisInfo::search(string $searchString[, int $maxResults]);
 
 where $searchString is all or part of a login or name
 and   $maxResults is the limit of result you want
 and   return value is an **array of string** containing the logins matching
       the query in their names or login.
+
+###### Search logins by school/promo/city
+
+      Array	IonisInfo::getLogins([string $school, int $promo, string $city]);
+
+where $school is the requested school or 0 for all schools
+and   $promo is the requested or 0 for all promos
+and   $city is the requested city or 0 for all cities
+and   return value is an **array of string** containing the logins.
+
+By default, the three values are 0.
 
 ### Get informations from intranet
 
