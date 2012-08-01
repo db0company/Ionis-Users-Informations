@@ -18,3 +18,4 @@ $intra_password = '';
 
 $absolute_path_local_files = dirname(__FILE__).'/local_files';
 
+$afs = false;
