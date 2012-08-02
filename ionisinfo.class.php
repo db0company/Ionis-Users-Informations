@@ -37,18 +37,11 @@ class			IonisInfo
     $this->path_local_files = $path_local_files;
     $this->intra_pass = $ionis_ppp_pass;
     $this->intra_is_connected = false;
-    try
-      {
-	$this->bdd = new PDO('mysql:host=localhost;dbname='.$dbname,
-			     $mysql_login, $mysql_pass);
-      }
-    catch (Exception $e)
-      {
-	echo "MySQL Connection error.\n";
-	return ;
-      }
-    if (!($this->createTable($dbname)))
-      return ;
+    $this->bdd = new PDO('mysql:host=localhost;dbname='.$dbname,
+			 $mysql_login, $mysql_pass);
+    $this->bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $this->createTable($dbname);
 
     $this->afs = $afs;
     $this->pass_file = $this->path_local_files.'/'.$this->pass_file;
@@ -71,7 +64,11 @@ class			IonisInfo
   private function	createTable($dbname)
   {
     $req = $this->bdd->prepare('SELECT uid FROM ionisusersinformations');
-    if (!$req->execute())
+    try
+      {
+	$req->execute();
+      }
+    catch (PDOException $ex)
       {
 	$req = $this->bdd->prepare('CREATE TABLE `'.$dbname.'`.`ionisusersinformations`
   (
@@ -90,14 +87,8 @@ class			IonisInfo
       )
   );
 ');
-	if (!($req->execute(array())))
-	  {
-	    $err = $req->errorInfo();
-	    echo $err[2];
-	    return (false);
-	  }
+	$req->execute(array());
       }
-    return (true);
   }
 
   private function	sshConnect()
@@ -409,8 +400,7 @@ class			IonisInfo
 
   public function	getLogins($school = 0, $promo = 0, $city = 0)
   {
-    global $bdd;
-    $req = $bdd->prepare('
+    $req = $this->bdd->prepare('
        SELECT login FROM ionisusersinformations
        WHERE school LIKE ? AND promo LIKE ? AND city LIKE ?');
     $req->execute(array((empty($school) ? "%" : $school),
