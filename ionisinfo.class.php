@@ -409,6 +409,53 @@ class			IonisInfo
     return $req->fetchAll(PDO::FETCH_COLUMN, 0);
   }
 
+  public function	getCities()
+  {
+    $req = $this->bdd->prepare('SELECT DISTINCT city FROM ionisusersinformations');
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_COLUMN, 0);
+  }
+
+  public function	getSchools($from_database = false)
+  {
+    $schools = array('isbp', 'epitech', 'epita', 'ionis',
+		     'etna', 'ipsa', 'eart', 'supinternet', 'web');
+    if (!$from_database)
+      return $schools;
+
+    $req = $this->bdd->prepare('SELECT DISTINCT school FROM ionisusersinformations');
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_COLUMN, 0);
+  }
+
+  public function	getPromos($school = 'epitech',
+				  $from_database = false)
+  {
+    if ($from_database)
+      {
+	$req = $this->bdd->prepare('SELECT DISTINCT promo FROM ionisusersinformations WHERE school=?');
+	$req->execute(array($school));
+	return $req->fetchAll(PDO::FETCH_COLUMN, 0);
+      }
+    $years = array('isbp' => 5,
+		   'epitech' => 5,
+		   'epita' => 5,
+		   'etna' => 3,
+		   'ipsa' => 5,
+		   'eart' => 5,
+		   'supinternet' => 3,
+		   'web' => 2);
+
+    if (!isset($years[$school]))
+      $school = 'epitech';
+
+    $min_year = @date('Y');
+    if (@date('m') >= 9)
+      $min_year++;
+
+    return range($min_year, ($min_year + $years[$school] - 1));
+  }
+
   /*
    **********************************
    ** Intra functions

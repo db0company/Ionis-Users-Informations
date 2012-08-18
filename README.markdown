@@ -137,7 +137,31 @@ and   return value is the phone number in the .plan file
 
 This function copy the .plan public file (afs) locally.
 
+###### Get global informations
+
+     Array	IonisInfo::getSchools([bool $from_database]);
+
+where $from_database is false (default) if you want to be sure that these
+      schools exists and are real, true if you want to get them from the
+      database (generated automatically so can be a fake school like "tmp",
+      "old", "guest", "prof-adm"...)
+and   return value is an array containing schools.
+
+     Array	IonisInfo::getCities([string $school]);
+
+where $school is an optionnal parameter to select only cities where the
+      given school is
+and   return value is an array containing cities.
+
+     Array	IonisInfo::getPromos([string $school, bool $from_database]);
+
+This function return an array of **current promos** for the given school (epitech
+by default). If the $from_database optionnal parameter is true (false by default),
+you will get all promos available in the database (even if students in this promo
+have finished school).
+
 ###### checkPass - Check the PPP password
+
      bool	IonisInfo::checkPass(string $login, string $pass);
 
 where $login is the **login** of the user trying to authenticate
