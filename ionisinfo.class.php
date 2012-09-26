@@ -322,17 +322,17 @@ class			IonisInfo
     return ('http://www.epitech.eu/intra/index.php?section=etudiant&page=rapport&login='.$login);
   }
 
-  public function	getPhotoUrl($login)
+  public function	getPhotoUrl($login, $https = false)
   {
     $login = $this->cleanLogin($login);
-    $default = 'http://www.epitech.eu/intra/photos/no.jpg';
+    $default = ($https ? 'https' : 'http').'://www.epitech.eu/intra/photos/no.jpg';
     $school = strtolower($this->getSchool($login));
     if (empty($school))
       return ($default);
     if ($school == 'epita')
       $photo = 'https://www.acu.epita.fr/intra/photo/'.$login;
     else
-      $photo = 'http://www.epitech.eu/intra/photos/'.$login.'.jpg';
+      $photo = ($https ? 'https' : 'http').'://www.epitech.eu/intra/photos/'.$login.'.jpg';
     if (@fopen($photo, 'r'))
       return ($photo);
     return ($default);
