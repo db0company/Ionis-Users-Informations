@@ -94,9 +94,10 @@ It is only guaranteed to work with Epitech students.
 
 ###### Get photos
 
-     string	IonisInfo::getPhotoUrl(string $login);
+     string	IonisInfo::getPhotoUrl(string $login[, bool $https]);
 
 where $login is the **login** you are looking for
+and   $https is false (default) for http, true for https
 and   return value is the **url** of the student photo
       or an empty string on failure.
 
