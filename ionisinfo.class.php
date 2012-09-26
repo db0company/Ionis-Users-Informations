@@ -409,10 +409,10 @@ class			IonisInfo
     return $req->fetchAll(PDO::FETCH_COLUMN, 0);
   }
 
-  public function	getCities()
+  public function	getCities($school = 'epitech')
   {
-    $req = $this->bdd->prepare('SELECT DISTINCT city FROM ionisusersinformations');
-    $req->execute();
+    $req = $this->bdd->prepare('SELECT DISTINCT city FROM ionisusersinformations WHERE school=?');
+    $req->execute(array($school));
     return $req->fetchAll(PDO::FETCH_COLUMN, 0);
   }
 
